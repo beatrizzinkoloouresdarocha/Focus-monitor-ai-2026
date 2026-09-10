@@ -1,49 +1,50 @@
-import importlib
-
 import cv2
+import mediapipe as mp
 import numpy as np
-
-# Importacao dinamica para evitar o erro reportMissingImports do Pylance no MediaPipe 1.0+
-mp_face_mesh = importlib.import_module("mediapipe.python.solutions.face_mesh")
 
 
 class FocusDetector:
-    def __init__(self):
-        self.face_mesh = mp_face_mesh.FaceMesh(
-            max_num_faces=1,
-            refine_landmarks=True,
-            min_detection_confidence=0.5,
-            min_tracking_confidence=0.5,
+    def __init__(self, model_path: str = "face_landmarker.task"):
+        base_options = mp.tasks.BaseOptions(model_asset_path=model_path)
+        options = mp.tasks.vision.FaceLandmarkerOptions(
+            base_options=base_options,
+            running_mode=mp.tasks.vision.RunningMode.IMAGE,
+            num_faces=1,
         )
+        self.landmarker = mp.tasks.vision.FaceLandmarker.create_from_options(options)
 
     def process_frame(self, frame):
         h, w, _ = frame.shape
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = self.face_mesh.process(rgb_frame)
+        mp_image = mp.Image(
+            image_format=mp.ImageFormat.SRGB, data=rgb_frame
+        )
+
+        results = self.landmarker.detect(mp_image)
 
         status = "Focado"
         color = (0, 255, 0)  # Verde
 
-        if not results.multi_face_landmarks:
+        if not results.face_landmarks:
             return "Ausente", (0, 0, 255)  # Vermelho
 
-        for face_landmarks in results.multi_face_landmarks:
+        for face_landmarks in results.face_landmarks:
             nose = np.array(
                 [
-                    face_landmarks.landmark[1].x * w,
-                    face_landmarks.landmark[1].y * h,
+                    face_landmarks[1].x * w,
+                    face_landmarks[1].y * h,
                 ]
             )
             left_eye = np.array(
                 [
-                    face_landmarks.landmark[33].x * w,
-                    face_landmarks.landmark[33].y * h,
+                    face_landmarks[33].x * w,
+                    face_landmarks[33].y * h,
                 ]
             )
             right_eye = np.array(
                 [
-                    face_landmarks.landmark[263].x * w,
-                    face_landmarks.landmark[263].y * h,
+                    face_landmarks[263].x * w,
+                    face_landmarks[263].y * h,
                 ]
             )
 
