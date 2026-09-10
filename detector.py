@@ -1,11 +1,13 @@
 import cv2
-import mediapipe.python.solutions.face_mesh as mp_face_mesh
+import mediapipe as mp
 import numpy as np
 
 
 class FocusDetector:
     def __init__(self):
-        self.face_mesh = mp_face_mesh.FaceMesh(
+        # # noqa: B009 instrui o Ruff a ignorar a verificação nesta linha específica
+        self.mp_face_mesh = getattr(mp, "solutions").face_mesh  # noqa: B009
+        self.face_mesh = self.mp_face_mesh.FaceMesh(
             max_num_faces=1,
             refine_landmarks=True,
             min_detection_confidence=0.5,
