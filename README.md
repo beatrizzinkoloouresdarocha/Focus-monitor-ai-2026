@@ -1,25 +1,21 @@
-# Focus Monitor - Inteligencia Artificial para Produtividade
+# Focus Monitor - Inteligência Artificial para Produtividade
 
-O **Focus Monitor** e uma aplicacao em Python baseada em visao computacional que analisa em tempo real o nivel de foco do usuario atraves da webcam, identificando momentos de distracao, ma postura ou ausencia da tela.
+O **Focus Monitor** é uma aplicação em Python baseada em visão computacional que analisa em tempo real o nível de foco do usuário através da webcam, identificando momentos de distração, má postura ou ausência da tela.
 
-## Tecnologias Utilizadas
-* Python 3
-* OpenCV
-* MediaPipe
-* NumPy
+## 🎯 Funcionalidades
+* **Status Focado (Verde):** Identifica quando o usuário está olhando diretamente para a tela.
+* **Status Distraído (Laranja):** Detecta quando o usuário desvia o olhar para os lados ou para baixo (ex: olhando o celular) e inicia a contagem do tempo inativo.
+* **Status Ausente (Vermelho):** Notifica quando o usuário não está visível na câmera.
 
-## Como Executar o Projeto
+## 🚀 Tecnologias Utilizadas
+* **Python 3**
+* **OpenCV** (Captura e processamento de vídeo)
+* **MediaPipe** (Detecção e mapeamento facial com FaceMesh)
+* **NumPy** (Cálculos vetoriais de orientação)
 
-1. Clone o repositorio:
-   git clone https://github.com/beatrizzinkoloouresdarocha/Focus-monitor-ai-2026.git
+## ⚙️ Como Executar o Projeto
+
+1. Clone o repositório:
+   ```bash
+   git clone [https://github.com/beatrizzinkoloouresdarocha/Focus-monitor-ai-2026.git](https://github.com/beatrizzinkoloouresdarocha/Focus-monitor-ai-2026.git)
    cd Focus-monitor-ai-2026
-
-2. Crie e ative um ambiente virtual:
-   python -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-
-3. Instale as dependencias:
-   pip install -r requirements.txt
-
-4. Execute a aplicacao:
-   python main.py

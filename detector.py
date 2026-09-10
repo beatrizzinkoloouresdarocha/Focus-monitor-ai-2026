@@ -1,10 +1,13 @@
 import cv2
 import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 import numpy as np
 
 
 class FocusDetector:
     def __init__(self):
+        # Utiliza a API compatível com MediaPipe 1.0+
         self.mp_face_mesh = mp.solutions.face_mesh
         self.face_mesh = self.mp_face_mesh.FaceMesh(
             max_num_faces=1,
@@ -25,7 +28,6 @@ class FocusDetector:
             return "Ausente", (0, 0, 255)  # Vermelho
 
         for face_landmarks in results.multi_face_landmarks:
-            # Coordenadas dos pontos chave (Nariz e Olhos)
             nose = np.array(
                 [
                     face_landmarks.landmark[1].x * w,
@@ -45,20 +47,15 @@ class FocusDetector:
                 ]
             )
 
-            # Centro dos olhos e largura da face para normalização
             eye_center = (left_eye + right_eye) / 2
             face_width = np.linalg_norm(left_eye - right_eye)
 
             if face_width == 0:
                 continue
 
-            # 1. Ajuste Horizontal (Olhar para os lados)
             horizontal_diff = abs(nose[0] - eye_center[0]) / face_width
-
-            # 2. Ajuste Vertical (Olhar para baixo/celular ou para cima)
             vertical_diff = (nose[1] - eye_center[1]) / face_width
 
-            # Validação dos limites de atenção
             if (
                 horizontal_diff > 0.35
                 or vertical_diff > 0.65
