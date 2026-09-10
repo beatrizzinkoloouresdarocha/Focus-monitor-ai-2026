@@ -1,13 +1,12 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+from mediapipe.python.solutions import face_mesh as mp_face_mesh
 
 
 class FocusDetector:
     def __init__(self):
-        # Acesso direto às soluções do MediaPipe
-        self.mp_face_mesh = mp.solutions.face_mesh
-        self.face_mesh = self.mp_face_mesh.FaceMesh(
+        self.face_mesh = mp_face_mesh.FaceMesh(
             max_num_faces=1,
             refine_landmarks=True,
             min_detection_confidence=0.5,
@@ -59,7 +58,7 @@ class FocusDetector:
             # 2. Ajuste Vertical (Olhar para baixo/celular ou para cima)
             vertical_diff = (nose[1] - eye_center[1]) / face_width
 
-            # Validação dos limites
+            # Validação dos limites de atenção
             if (
                 horizontal_diff > 0.35
                 or vertical_diff > 0.65
