@@ -4,14 +4,19 @@ import numpy as np
 
 
 class FocusDetector:
-    def __init__(self, model_path: str = "face_landmarker.task"):
-        base_options = mp.tasks.BaseOptions(model_asset_path=model_path)
+    def __init__(self):
+        # Configuração do FaceLandmarker via Tasks API (MediaPipe 1.0+)
+        base_options = mp.tasks.BaseOptions(
+            model_asset_path="face_landmarker.task"
+        )
         options = mp.tasks.vision.FaceLandmarkerOptions(
             base_options=base_options,
             running_mode=mp.tasks.vision.RunningMode.IMAGE,
             num_faces=1,
         )
-        self.landmarker = mp.tasks.vision.FaceLandmarker.create_from_options(options)
+        self.landmarker = (
+            mp.tasks.vision.FaceLandmarker.create_from_options(options)
+        )
 
     def process_frame(self, frame):
         h, w, _ = frame.shape
