@@ -5,8 +5,7 @@ import numpy as np
 
 class FocusDetector:
     def __init__(self):
-        # # noqa: B009 instrui o Ruff a ignorar a verificação nesta linha específica
-        self.mp_face_mesh = getattr(mp, "solutions").face_mesh  # noqa: B009
+        self.mp_face_mesh = mp.solutions.face_mesh
         self.face_mesh = self.mp_face_mesh.FaceMesh(
             max_num_faces=1,
             refine_landmarks=True,
