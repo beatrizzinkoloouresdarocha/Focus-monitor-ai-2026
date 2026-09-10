@@ -54,7 +54,6 @@ class FocusDetector:
             )
 
             eye_center = (left_eye + right_eye) / 2
-            # Correção feita aqui: np.linalg.norm
             face_width = np.linalg.norm(left_eye - right_eye)
 
             if face_width == 0:
