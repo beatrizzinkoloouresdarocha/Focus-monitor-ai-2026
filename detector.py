@@ -1,14 +1,14 @@
+import importlib
 import cv2
 import numpy as np
+
+# Importacao dinamica para evitar o erro reportMissingImports do Pylance no MediaPipe 1.0+
+mp_face_mesh = importlib.import_module("mediapipe.python.solutions.face_mesh")
 
 
 class FocusDetector:
     def __init__(self):
-        # Importacao interna para evitar erros de inicializacao do MediaPipe 1.0+
-        import mediapipe as mp
-
-        self.mp_face_mesh = mp.solutions.face_mesh
-        self.face_mesh = self.mp_face_mesh.FaceMesh(
+        self.face_mesh = mp_face_mesh.FaceMesh(
             max_num_faces=1,
             refine_landmarks=True,
             min_detection_confidence=0.5,
@@ -27,7 +27,6 @@ class FocusDetector:
             return "Ausente", (0, 0, 255)  # Vermelho
 
         for face_landmarks in results.multi_face_landmarks:
-            # Coordenadas dos pontos chave (Nariz e Olhos)
             nose = np.array(
                 [
                     face_landmarks.landmark[1].x * w,
@@ -47,20 +46,15 @@ class FocusDetector:
                 ]
             )
 
-            # Centro dos olhos e largura da face para normalizacao
             eye_center = (left_eye + right_eye) / 2
             face_width = np.linalg_norm(left_eye - right_eye)
 
             if face_width == 0:
                 continue
 
-            # 1. Ajuste Horizontal (Olhar para os lados)
             horizontal_diff = abs(nose[0] - eye_center[0]) / face_width
-
-            # 2. Ajuste Vertical (Olhar para baixo/celular ou para cima)
             vertical_diff = (nose[1] - eye_center[1]) / face_width
 
-            # Validacao dos limites de atencao
             if (
                 horizontal_diff > 0.35
                 or vertical_diff > 0.65
