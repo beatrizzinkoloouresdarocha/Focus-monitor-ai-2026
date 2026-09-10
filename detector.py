@@ -1,12 +1,13 @@
 import cv2
 import mediapipe as mp
 import numpy as np
-from mediapipe.python.solutions import face_mesh as mp_face_mesh
 
 
 class FocusDetector:
     def __init__(self):
-        self.face_mesh = mp_face_mesh.FaceMesh(
+        # Acessa a solução FaceMesh de forma compatível
+        self.mp_face_mesh = getattr(mp, "solutions").face_mesh
+        self.face_mesh = self.mp_face_mesh.FaceMesh(
             max_num_faces=1,
             refine_landmarks=True,
             min_detection_confidence=0.5,
