@@ -4,8 +4,8 @@ import numpy as np
 
 
 class FocusDetector:
+
     def __init__(self):
-        # Configuração do FaceLandmarker via Tasks API (MediaPipe 1.0+)
         base_options = mp.tasks.BaseOptions(
             model_asset_path="face_landmarker.task"
         )
@@ -14,8 +14,8 @@ class FocusDetector:
             running_mode=mp.tasks.vision.RunningMode.IMAGE,
             num_faces=1,
         )
-        self.landmarker = (
-            mp.tasks.vision.FaceLandmarker.create_from_options(options)
+        self.landmarker = mp.tasks.vision.FaceLandmarker.create_from_options(
+            options
         )
 
     def process_frame(self, frame):
@@ -54,7 +54,8 @@ class FocusDetector:
             )
 
             eye_center = (left_eye + right_eye) / 2
-            face_width = np.linalg_norm(left_eye - right_eye)
+            # Correção feita aqui: np.linalg.norm
+            face_width = np.linalg.norm(left_eye - right_eye)
 
             if face_width == 0:
                 continue
